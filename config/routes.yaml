@@ -1,5 +1,12 @@
+app_logout:
+  methods: GET
+  path: /logout
+
+
+
 controllers:
     resource:
-        path: ../src/Controller/
         namespace: App\Controller
+        path: ../src/Controller/
     type: attribute
+

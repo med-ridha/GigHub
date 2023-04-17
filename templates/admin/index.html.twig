@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+    <h1>Dashboard</h1>
+    <h2>Users</h2>
+    <table border=1>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+        {% for user in listUsers %}
+            <tr>
+                <td>{{ user.getFullName() }}</td>
+                <td>{{ user.getEmail() }}</td>
+                <td>{{ user.getRoles()[0] }}</td>
+                <td>
+                    <a href="#">edit</a>
+                    <a href="#">delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock %}
