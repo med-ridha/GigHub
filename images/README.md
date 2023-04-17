@@ -13,4 +13,7 @@ Home1:
 home2:
 ![alt text](https://github.com/med-ridha/gighub/blob/8ebf29110befe5ecb6159150586a87f2a188b287/images/home_notlogedin.png?raw=true)
 
+user tabel schema:
+![alt text](https://github.com/med-ridha/gighub/blob/763efac9cc8be90bfc8be4273887c11defda6f17/images/users_table_schema.png?raw=true)
+
 
