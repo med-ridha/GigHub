@@ -1,8 +1,8 @@
 |ID | user story                          | importance | duration |
 |---|-------------------------------------|------------|----------|
-| 01|As an admin, I want to have access to a dashboard on GigHub where I can manage users, transactions, and other important data, so that I can ensure the security and integrity of the platform and prevent fraud or misuse.| +++ | 4 |
-| 02|As a client, I want to be able to easily post job listings and recieve bids from qualified freelancers, so that I can find the best fit for my project and budget.| +++ | 4 |
-| 03|As a new user, I want to be able to quickly create an account and set up my profile, so that I can start browsing and applying to jobs on GigHub.| +++ | 4 |
+| 01|As a new user, I want to be able to quickly create an account and set up my profile, so that I can start browsing and applying to jobs on GigHub.| +++ | 4 |
+| 02|As an admin, I want to have access to a dashboard on GigHub where I can manage users, transactions, and other important data, so that I can ensure the security and integrity of the platform and prevent fraud or misuse.| +++ | 4 |
+| 03|As a client, I want to be able to easily post job listings and recieve bids from qualified freelancers, so that I can find the best fit for my project and budget.| +++ | 4 |
 | 04|As a client, I want to be able to securely and easily pay freelancers through GigHub's payment system, so that I can manage invoices and transactions efficiently | +++ | 4 |
 | 05|As a freelancer, I want to be able to easily communicate with clients through messaging and video conferencing tools on GigHub, so that I can collaborate effectively and deliver high-quality work | +++ | 6 |
 | 06|As a freelancer, I want to be able to search and filter job listings on GigHub based on my skills, experience, and preferences, so that I can find relevant and high-paying job opportunitie | ++ | 3 |
