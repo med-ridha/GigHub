@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create !{% endblock %}
+
+{% block body %}
+    <h1>Create !</h1>
+
+    {{ form_start(form) }}
+        {{ form_row (form.title) }}
+        {{ form_row (form.description) }}
+        {{ form_row (form.price) }}
+        {{ form_row (form.dueDate) }}
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a href="{{ path('app_gig') }}">Back to the list</a>
+        </li>
+    </ul>
+
+{% endblock %}
+

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GigController!{% endblock %}
+
+{% block body %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for gig in gigs %}
+        <div class="row">
+            <div class="col-md-8">
+                <h2>{{ gig.title }}</h2>
+                <p>{{ gig.description }}</p>
+                <p>{{ gig.price }}</p>
+                <p>{{ gig.dueDate|date('Y-m-d') }}</p>
+            </div>
+            <div class="col-md-4">
+                <a href="">Show</a>
+                <a href="">Edit</a>
+                <a href="">Delete</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

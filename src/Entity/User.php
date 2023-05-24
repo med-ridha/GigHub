@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -41,6 +43,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $gender = null;
+
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Gig::class, orphanRemoval: true)]
+    private Collection $gigs;
+
+    public function __construct()
+    {
+        $this->gigs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -156,6 +166,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGender(string $gender): self
     {
         $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Gig>
+     */
+    public function getGigs(): Collection
+    {
+        return $this->gigs;
+    }
+
+    public function addGig(Gig $gig): self
+    {
+        if (!$this->gigs->contains($gig)) {
+            $this->gigs->add($gig);
+            $gig->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGig(Gig $gig): self
+    {
+        if ($this->gigs->removeElement($gig)) {
+            // set the owning side to null (unless already changed)
+            if ($gig->getCreator() === $this) {
+                $gig->setCreator(null);
+            }
+        }
 
         return $this;
     }
