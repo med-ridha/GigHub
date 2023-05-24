@@ -26,9 +26,7 @@
                     {% if app.user.getRoles()[0] == "ROLE_ADMIN" %}
                         <a href="{{ path('app_admin') }}">DashBoard</a>
                     {% endif %}
-                    {% if app.user.getRoles()[0] == "ROLE_CLIENT" %}
-                        <a href="{{ path('app_gigs_create') }}">Create Gig</a>
-                    {% endif %}
+                    <a href="{{ path('app_gigs') }}">My Gigs</a>
                     <a href="{{ path('app_logout') }}">Logout</a>
                 {% endif %}
 

@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>SHOW</h1>
+    <p>creator : {{ gig.creator.fullname }}
+    <p>title: {{ gig.title }}</p>
+    <p>description: {{ gig.description }}</p>
+    <p>price: {{ gig.price }}</p>
+    <p>created_at: {{ gig.posteDate | date('Y-M-D') }}</p>
+    <p>due date: {{ gig.dueDate | date('Y-M-D') }}</p>
+    {% if gig.state == 'open' %}
+        <p>status: open</p>
+    {% endif %}
+    {% if gig.state == 'accepted' %}
+        <p>status: Accepted</p>
+    {% endif %}
+    {% if gig.state == 'done' %}
+        <p>status: completed</p>
+    {% endif %}
+
+    {% if app.user.getRoles()[0] == "ROLE_CLIENT" %}
+    <h4>Freelancers: </h4>
+    {% for freelancer in gig.freelancers  %}
+        <div style="display: flex">
+            <span style="margin-right: 20px">{{ freelancer}} </span>
+            {% if gig.state != 'accepted' %}
+                <a href="{{ url( 'app_gigs_accept', {'id': gig.id, 'freelancer': freelancer} ) }}">Accept</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% endif %}
+    
+    {% if app.user.getRoles()[0] == "ROLE_FREELANCER" %}
+        <a href="{{ path('app_gigs_apply', {'id': gig.id}) }}">Apply</a>
+    {% endif %}
+
+{% endblock %}

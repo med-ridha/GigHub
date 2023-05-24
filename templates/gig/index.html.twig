@@ -3,24 +3,46 @@
 {% block title %}Hello GigController!{% endblock %}
 
 {% block body %}
+    <div style="display: flex">
+        <h3 style = "width: 40%">Create a new Gig
+        <a style = "width: 40%" href="{{ url('app_gigs_create') }}"> + </a>  
+        </h3>
+    </div>
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
         </div>
     {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-error">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div style="display: flex; flex-wrap: wrap;">
+        
     {% for gig in gigs %}
-        <div class="row">
-            <div class="col-md-8">
+        <div style = "width: 200px">
+            <div >
                 <h2>{{ gig.title }}</h2>
                 <p>{{ gig.description }}</p>
                 <p>{{ gig.price }}</p>
                 <p>{{ gig.dueDate|date('Y-m-d') }}</p>
             </div>
-            <div class="col-md-4">
-                <a href="">Show</a>
-                <a href="">Edit</a>
-                <a href="">Delete</a>
+            <div >
+                <a href="{{ url ('app_gigs_show', {'id' : gig.id})}}">Show</a>
+                <a href="{{ url ('app_gigs_edit', {'id' : gig.id})}}">Edit</a>
+                <a href="{{ url ('app_gigs_delete', {'id' : gig.id})}}">Delete</a>
             </div>
         </div>
     {% endfor %}
+    {% if app.user.getRoles()[0] == 'ROLE_FREELANCER' %}
+        {% for gig in gigsFreelancer %}
+            <p> {{gig.title}} </p>
+            <div >
+                <a href="{{ url ('app_gigs_markdone', {'id' : gig.id})}}">Delete</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    </div>
 {% endblock %}

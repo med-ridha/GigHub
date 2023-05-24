@@ -7,12 +7,8 @@
           <div class="col-md-8">
             <h2>{{ gig.title }}</h2>
             <p>{{ gig.description }}</p>
-            <p><a class="btn btn-default" href="" role="button">View details &raquo;</a></p>
-          </div>
-          <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>...</p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+            <p>{{ gig.price }} <p>
+            <p><a class="btn btn-default" href="{{ url( 'app_gigs_show', { 'id': gig.id } ) }}" role="button">View details &raquo;</a></p>
           </div>
         </div>
       {% endfor %}

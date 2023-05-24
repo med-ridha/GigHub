@@ -36,6 +36,12 @@ class Gig
     #[ORM\JoinColumn(nullable: false)]
     private ?User $creator = null;
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $freelancers = [];
+
+    #[ORM\Column(length: 255)]
+    private ?string $state = 'open';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +127,39 @@ class Gig
     public function setCreator(?User $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getFreelancers(): array
+    {
+        return $this->freelancers;
+    }
+
+    public function setFreelancer(?array $freelancers): self
+    {
+        if ($freelancers == null) {
+            $freelancers = [];
+        }
+        $this->freelancers = $freelancers;
+
+        return $this;
+    }
+    public function addFreelancer(string $freelancer): self
+    {
+        $this->freelancers[] = $freelancer;
+
+        return $this;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(string $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }
