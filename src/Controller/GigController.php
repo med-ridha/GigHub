@@ -20,9 +20,12 @@ class GigController extends AbstractController
     {
         $gigs = $entityManager->getRepository(Gig::class)->findByCreator($user);
         $AllGigs = $entityManager->getRepository(Gig::class)->findAll();
-        for ($i = 0; $i < count($AllGigs); $i++) {
-            if (in_array($user->getUserIdentifier(), $AllGigs[$i]->getFreelancers())) {
-                $gigsFreelancer[] = $AllGigs[$i];
+        $gigsFreelancer = [];
+        if ($user->getRoles()[0] == 'ROLE_FREELANCER') {
+            for ($i = 0; $i < count($AllGigs); $i++) {
+                if (in_array($user->getUserIdentifier(), $AllGigs[$i]->getFreelancers())) {
+                    $gigsFreelancer[] = $AllGigs[$i];
+                }
             }
         }
         return $this->render('gig/index.html.twig', [
@@ -58,12 +61,20 @@ class GigController extends AbstractController
     }
 
     #[Route('/gigs/show/{id}', name: 'app_gigs_show')]
-    public function showId(EntityManagerInterface $entityManager, $id): Response
+    public function showId(EntityManagerInterface $entityManager, UserInterface $user, $id): Response
     {
         $gig = $entityManager->getRepository(Gig::class)->find($id);
+        if ($gig == null) {
+            $this->addFlash('error', 'Gig not found !');
+            return $this->redirectToRoute('app_gigs');
+        }
+        $applied = in_array($user->getUserIdentifier(), $gig->getFreelancers());
+        $accepted = $gig->getFreelancers()[0] == $user->getUserIdentifier() && $gig->getState() == 'accepted';
 
         return $this->render('gig/show.html.twig', [
             'gig' => $gig,
+            'applied' => $applied,
+            'accepted' => $accepted,
         ]);
     }
 
@@ -127,6 +138,11 @@ class GigController extends AbstractController
             $this->addFlash('error', 'This gig is already done !');
             return $this->redirectToRoute('app_gigs');
         }
+
+        if (in_array($user->getUserIdentifier(), $gig->getFreelancers())) {
+            $this->addFlash('error', 'You already applied to this gig !');
+            return $this->redirectToRoute('app_gigs');
+        }
         $gig->addFreelancer($user->getUserIdentifier());
         $entityManager->persist($gig);
         $entityManager->flush();
@@ -139,7 +155,7 @@ class GigController extends AbstractController
     #[IsGranted('ROLE_CLIENT')]
     public function accept(EntityManagerInterface $entityManager, UserInterface $user, $id, $freelancer): Response
     {
-        
+
         $gig = $entityManager->getRepository(Gig::class)->find($id);
         if ($gig == null) {
             $this->addFlash('error', 'Gig not found !');
@@ -162,9 +178,47 @@ class GigController extends AbstractController
         return $this->redirectToRoute('app_gigs');
     }
 
+    #[Route('gigs/cancel/{id}', name: 'app_gigs_cancel')]
+    #[IsGranted('ROLE_FREELANCER')]
+    public function cancel(EntityManagerInterface $entityManager, UserInterface $user, $id): Response
+    {
+        $gig = $entityManager->getRepository(Gig::class)->find($id);
+        if ($gig == null) {
+            $this->addFlash('error', 'Gig not found !');
+            return $this->redirectToRoute('app_gigs');
+        }
+        if ($gig->getState() == 'done') {
+            $this->addFlash('error', 'This gig is already done !');
+            return $this->redirectToRoute('app_gigs');
+        }
+        if ($gig->getState() == 'accepted') {
+            if ($gig->getFreelancers()[0] != $user->getUserIdentifier()) {
+                $this->addFlash('error', 'You are not the freelancer of this gig !');
+                return $this->redirectToRoute('app_gigs');
+            }
+            $gig->setFreelancers([]);
+            $gig->setState('open');
+        }
+        if ($gig->getState() == 'open') {
+            if (!in_array($user->getUserIdentifier(), $gig->getFreelancers())) {
+                $this->addFlash('error', 'You are not applied to this gig !');
+                return $this->redirectToRoute('app_gigs');
+            }
+            $allFreelancers = $gig->getFreelancers();
+            $allFreelancers = array_diff($allFreelancers, [$user->getUserIdentifier()]);
+            $gig->setFreelancer($allFreelancers);
+        }
+
+        $entityManager->persist($gig);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'You canceled your application !');
+        return $this->redirectToRoute('app_gigs');
+    }
+
     #[Route('/gigs/markdone/{id}', name: 'app_gigs_markdone')]
     #[IsGranted('ROLE_FREELANCER')]
-    public function markdone (EntityManagerInterface $entityManager, UserInterface $user, $id): Response
+    public function markdone(EntityManagerInterface $entityManager, UserInterface $user, $id): Response
     {
         $gig = $entityManager->getRepository(Gig::class)->find($id);
         if ($gig == null) {
@@ -175,7 +229,7 @@ class GigController extends AbstractController
             $this->addFlash('error', 'This gig is not accepted !');
             return $this->redirectToRoute('app_gigs');
         }
-        if ($gig->getFreelancer()[0] != $user->getUserIdentifier()) {
+        if ($gig->getFreelancers()[0] != $user->getUserIdentifier()) {
             $this->addFlash('error', 'You are not the freelancer of this gig !');
             return $this->redirectToRoute('app_gigs');
         }

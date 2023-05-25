@@ -1,29 +1,37 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.fullname, {
-            label: 'Full Name'
-        }) }}
+<div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <div class="card my-5">
+            {{ form_start(registrationForm, {attr: {class: "card-body cardbody-color p-lg-5"}}) }}
+            <div class="mb-3">
+                {{ form_row(registrationForm.email, {label: false, attr: {class:'form-control', placeholder: 'Email'}}) }}
+            </div>
+<div class="mb-3"> {{ form_row(registrationForm.fullname, {label: false, attr: {class:'form-control', placeholder: 'Full Name'}}) }} </div>
+<div class="mb-3"> {{ form_row(registrationForm.age, {label: false, attr: {class:'form-control', placeholder: 'Age'}}) }} </div>
+<div class="mb-3"> {{ form_row(registrationForm.gender, {label: false, attr: {class:'form-control', placeholder: 'Gender'}}) }} </div>
+<div class="mb-3"> {{ form_row(registrationForm.phonenumber, {label: false, attr : { class: 'form-control', placeholder : 'Phone Number'}})}} </div>
+<div class="mb-3"> {{ form_row(registrationForm.plainPassword, {label: false, attr: {class:'form-control', placeholder: "password"}}) }} </div>
+<div class="mb-3">
+        <span>Are you a Freelancer?</span>
+        {{ form_row(registrationForm.Freelancer, { label: false, required: false, attr: {class: 'form-control'} })}}
+</div>
+<div class="mb-3"> {{ form_row(registrationForm.agreeTerms, {attr: {class: 'form-control'}}) }} <div>
 
-        {{ form_row(registrationForm.age) }}
-        {{ form_row(registrationForm.gender) }}
-        {{ form_row(registrationForm.phonenumber, 
-        {label: 'Phone Number'})
-        }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.Freelancer, {
-            label: 'Are you a freelancer?', required: false
-        })}}
-        {{ form_row(registrationForm.agreeTerms) }}
+            <button type="submit" style="margin-top: 16px;" class="btn btn-color px-5 mb-5 w-100">Register</button>
+            {{ form_end(registrationForm) }}
+        </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+      </div>
+    </div>
+  </div>
+
 {% endblock %}

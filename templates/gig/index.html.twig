@@ -3,18 +3,22 @@
 {% block title %}Hello GigController!{% endblock %}
 
 {% block body %}
+    <div class="container">
+        
+    {% if app.user.getRoles()[0] == "ROLE_CLIENT"%}
     <div style="display: flex">
         <h3 style = "width: 40%">Create a new Gig
         <a style = "width: 40%" href="{{ url('app_gigs_create') }}"> + </a>  
         </h3>
     </div>
+    {% endif %}
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
         </div>
     {% endfor %}
     {% for message in app.flashes('error') %}
-        <div class="alert alert-error">
+        <div class="alert alert-danger">
             {{ message }}
         </div>
     {% endfor %}
@@ -22,7 +26,7 @@
         
     {% for gig in gigs %}
         <div style = "width: 200px">
-            <div >
+            <div>
                 <h2>{{ gig.title }}</h2>
                 <p>{{ gig.description }}</p>
                 <p>{{ gig.price }}</p>
@@ -35,14 +39,27 @@
             </div>
         </div>
     {% endfor %}
+        
     {% if app.user.getRoles()[0] == 'ROLE_FREELANCER' %}
         {% for gig in gigsFreelancer %}
-            <p> {{gig.title}} </p>
-            <div >
-                <a href="{{ url ('app_gigs_markdone', {'id' : gig.id})}}">Delete</a>
+            <div style = "width: 200px">
+                <div>
+                    <div><span> {{gig.title}} </span></div>
+                    <div><span> {{gig.price}} </span></div>
+                    <div><span> {{gig.state}} </span></div>
+                </div>
+                <div>
+                    <a href="{{ url ('app_gigs_show', {'id' : gig.id})}}">Show</a>
+                    {% if gig.state == 'open' or gig.state == 'accepted' %}
+                        <a href="{{ url ('app_gigs_cancel', {'id' : gig.id})}}">Cancel</a>
+                    {% endif %}
+                </div>
             </div>
+        {% else %}
+            <h3>No gigs found</h3>
         {% endfor %}
     {% endif %}
     
+    </div>
     </div>
 {% endblock %}

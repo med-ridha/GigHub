@@ -1,16 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Home</h1>
+    <div class="container">
+        {% if gigs | length > 0 %}
+            <h3>All Gigs</h3>
+        {% endif %}
+    <div style="display: flex; flex-wrap: wrap;">
       {% for gig in gigs %}
+        <div style = "background-color: #ebf2fa;width: 300px; padding: 30px; margin: 10px " >
         <div class="row">
-          <div class="col-md-8">
-            <h2>{{ gig.title }}</h2>
-            <p>{{ gig.description }}</p>
-            <p>{{ gig.price }} <p>
-            <p><a class="btn btn-default" href="{{ url( 'app_gigs_show', { 'id': gig.id } ) }}" role="button">View details &raquo;</a></p>
+          <div class="">
+              <div style="width: 50%">
+                  <h2>{{ gig.title }}</h2>
+              </div>
+            <div><span>{{ gig.description }}</span></div>
+            <div><span>{{ gig.price }} </span></div>
+            <div><span><a class="btn btn-default" href="{{ url( 'app_gigs_show', { 'id': gig.id } ) }}" role="button">View details</a></span></div>
           </div>
         </div>
+        </div>
+        {% else %}
+        <h3>No gigs found</h3>
       {% endfor %}
-    <p>Home page</p>
+    </div>
+    </div>
 {% endblock %}
