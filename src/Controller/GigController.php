@@ -69,7 +69,10 @@ class GigController extends AbstractController
             return $this->redirectToRoute('app_gigs');
         }
         $applied = in_array($user->getUserIdentifier(), $gig->getFreelancers());
-        $accepted = $gig->getFreelancers()[0] == $user->getUserIdentifier() && $gig->getState() == 'accepted';
+
+        $accepted = false;
+        if (sizeof($gig->getFreelancers()) > 0)
+            $accepted = $gig->getFreelancers()[0] == $user->getUserIdentifier() && $gig->getState() == 'accepted';
 
         return $this->render('gig/show.html.twig', [
             'gig' => $gig,
