@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
+use App\Entity\Gig;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -32,5 +33,16 @@ class AdminController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'User deleted successfully');
         return $this->redirectToRoute('app_admin');
+    }
+    #[Route('/admin/gig/delete/{id}', name: 'app_admin_gig_delete')]
+    #[IsGranted("ROLE_ADMIN")]
+    public function deleteGig(EntityManagerInterface $entityManager, $id): Response
+    {
+        $repository = $entityManager->getRepository(Gig::class);
+        $gig = $repository->find($id);
+        $entityManager->remove($gig);
+        $entityManager->flush();
+        $this->addFlash('success', 'Gig deleted successfully');
+        return $this->redirectToRoute('home');
     }
 }

@@ -5,6 +5,11 @@
         {% if gigs | length > 0 %}
             <h3>All Gigs</h3>
         {% endif %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div style="display: flex; flex-wrap: wrap;">
       {% for gig in gigs %}
         <div style = "background-color: #ebf2fa;width: 300px; padding: 30px; margin: 10px " >
@@ -17,6 +22,10 @@
             <div><span>{{ gig.price }} </span></div>
             <div><span>{{ gig.state }} </span></div>
             <div><span><a class="btn btn-default" href="{{ url( 'app_gigs_show', { 'id': gig.id } ) }}" role="button">View details</a></span></div>
+            {% if app.user != null and app.user.getRoles()[0] == 'ROLE_ADMIN' %}
+                <div><span><a onClick="return confirm('Are you sure you want to remove this gig?')" href=" {{ url ('app_admin_gig_delete', {id: gig.id})}}" class="btn btn-default">Delete</a></span></div>
+            {% endif %}
+            
           </div>
         </div>
         </div>
