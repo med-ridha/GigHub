@@ -78,6 +78,7 @@ class GigController extends AbstractController
             'gig' => $gig,
             'applied' => $applied,
             'accepted' => $accepted,
+            'done' => $gig->getState() == 'done',
         ]);
     }
 
@@ -168,6 +169,10 @@ class GigController extends AbstractController
             $this->addFlash('error', 'This gig is already accepted !');
             return $this->redirectToRoute('app_gigs');
         }
+        if ($gig->getState() == 'done') {
+            $this->addFlash('error', 'This gig is already done !');
+            return $this->redirectToRoute('app_gigs');
+        }
         if ($gig->getCreator()->getUserIdentifier() != $user->getUserIdentifier()) {
             $this->addFlash('error', 'You are not the creator of this gig !');
             return $this->redirectToRoute('app_gigs');
@@ -178,7 +183,7 @@ class GigController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'You accepted this freelancer !');
-        return $this->redirectToRoute('app_gigs');
+        return $this->redirectToRoute('app_gigs_show', ['id' => $id]);
     }
 
     #[Route('gigs/cancel/{id}', name: 'app_gigs_cancel')]
@@ -194,28 +199,28 @@ class GigController extends AbstractController
             $this->addFlash('error', 'This gig is already done !');
             return $this->redirectToRoute('app_gigs');
         }
+        if ($gig->getState() == 'open') {
+            if (!in_array($user->getUserIdentifier(), $gig->getFreelancers())) {
+                $this->addFlash('error', 'You are not applied to this gig !: 212');
+                return $this->redirectToRoute('app_gigs');
+            }
+            $allFreelancers = $gig->getFreelancers();
+            $allFreelancers = array_diff($allFreelancers, [$user->getUserIdentifier()]);
+            $this->addFlash('success', 'You canceled your application !');
+            $gig->setFreelancer($allFreelancers);
+        }
         if ($gig->getState() == 'accepted') {
             if ($gig->getFreelancers()[0] != $user->getUserIdentifier()) {
                 $this->addFlash('error', 'You are not the freelancer of this gig !');
                 return $this->redirectToRoute('app_gigs');
             }
-            $gig->setFreelancers([]);
+            $this->addFlash('success', 'You canceled your job !');
+            $gig->setFreelancer([]);
             $gig->setState('open');
         }
-        if ($gig->getState() == 'open') {
-            if (!in_array($user->getUserIdentifier(), $gig->getFreelancers())) {
-                $this->addFlash('error', 'You are not applied to this gig !');
-                return $this->redirectToRoute('app_gigs');
-            }
-            $allFreelancers = $gig->getFreelancers();
-            $allFreelancers = array_diff($allFreelancers, [$user->getUserIdentifier()]);
-            $gig->setFreelancer($allFreelancers);
-        }
-
         $entityManager->persist($gig);
         $entityManager->flush();
 
-        $this->addFlash('success', 'You canceled your application !');
         return $this->redirectToRoute('app_gigs');
     }
 
@@ -241,6 +246,6 @@ class GigController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'You marked this gig as done !');
-        return $this->redirectToRoute('app_gigs');
+        return $this->redirectToRoute('app_gigs_show', ['id' => $id]);
     }
 }

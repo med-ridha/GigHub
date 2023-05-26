@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GigController!{% endblock %}
+{% block title %}Gigs!{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -8,10 +8,17 @@
     {% if app.user.getRoles()[0] == "ROLE_CLIENT"%}
     <div style="display: flex">
         <h3 style = "width: 40%">Create a new Gig
-        <a style = "width: 40%" href="{{ url('app_gigs_create') }}"> + </a>  
+            <a style = "width: 40%" href="{{ url('app_gigs_create') }}"> + </a>  
         </h3>
     </div>
     {% endif %}
+        
+    {% if app.user.getRoles()[0] == "ROLE_FREELANCER" %}
+        <div style="display: flex">
+            <h3 style = "width: 40%">Gigs that you applied in : </h3>
+        </div>
+    {% endif %}
+    
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
@@ -25,33 +32,32 @@
     <div style="display: flex; flex-wrap: wrap;">
         
     {% for gig in gigs %}
-        <div style = "width: 200px">
+        <div style = "background-color: #ebf2fa;width: 300px; padding: 30px; margin: 10px">
             <div>
                 <h2>{{ gig.title }}</h2>
-                <p>{{ gig.description }}</p>
-                <p>{{ gig.price }}</p>
-                <p>{{ gig.dueDate|date('Y-m-d') }}</p>
+                <div><span>{{ gig.price }}</span></div>
+                <div><span>{{ gig.dueDate|date('Y-m-d') }}</span></div>
             </div>
             <div >
                 <a href="{{ url ('app_gigs_show', {'id' : gig.id})}}">Show</a>
                 <a href="{{ url ('app_gigs_edit', {'id' : gig.id})}}">Edit</a>
-                <a href="{{ url ('app_gigs_delete', {'id' : gig.id})}}">Delete</a>
+                <a onClick="return confirm('Are you sure you want to delete this gig?')" href="{{ url ('app_gigs_delete', {'id' : gig.id})}}">Delete</a>
             </div>
         </div>
     {% endfor %}
         
     {% if app.user.getRoles()[0] == 'ROLE_FREELANCER' %}
         {% for gig in gigsFreelancer %}
-            <div style = "width: 200px">
+            <div style = "background-color: #ebf2fa;width: 300px; padding: 30px; margin: 10px">
                 <div>
-                    <div><span> {{gig.title}} </span></div>
+                    <h2> {{gig.title}} </h2>
                     <div><span> {{gig.price}} </span></div>
                     <div><span> {{gig.state}} </span></div>
                 </div>
                 <div>
                     <a href="{{ url ('app_gigs_show', {'id' : gig.id})}}">Show</a>
                     {% if gig.state == 'open' or gig.state == 'accepted' %}
-                        <a href="{{ url ('app_gigs_cancel', {'id' : gig.id})}}">Cancel</a>
+                        <a onClick="return confirm('Are you sure you want to cancel this gig?')" href="{{ url ('app_gigs_cancel', {'id' : gig.id})}}">Cancel</a>
                     {% endif %}
                 </div>
             </div>

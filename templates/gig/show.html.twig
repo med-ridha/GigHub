@@ -3,6 +3,11 @@
 {% block body %}
     <div class="container">
         
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <h1>{{gig.title}}</h1>
     <div><span>creator : {{ gig.creator.fullname }} </span></div>
     <div><span>description: {{ gig.description }}</span></div>
@@ -24,12 +29,12 @@
     {% for freelancer in gig.freelancers  %}
         <div style="display: flex">
             <span style="margin-right: 20px">{{ freelancer}} </span>
-            {% if gig.state != 'accepted' %}
+            {% if gig.state != 'accepted'  and gig.state != done%}
                 <a href="{{ url( 'app_gigs_accept', {'id': gig.id, 'freelancer': freelancer} ) }}">Accept</a>
             {% endif %}
         </div>
         {% else %}
-            <h3>No freelancers found</h3>
+            <h3>No freelancers applied yet</h3>
     {% endfor %}
     {% endif %}
     

@@ -14,10 +14,10 @@
       <div class="col-md-6 offset-md-3">
         <div class="card my-5">
             {{ form_start(form, {attr: {class: "card-body cardbody-color p-lg-5"}}) }}
-<div class="mb-3"> {{ form_row (form.title, {label : false, attr: {class: "form-control", placeholder: "Title"}}) }} </div>
-<div class="mb-3"> {{ form_row (form.description, {label : false, attr: {class: "form-control", placeholder: "Description"}}) }} </div>
-<div class="mb-3"> {{ form_row (form.price, {label : false, attr: {class: "form-control", placeholder: "Price"}}) }} </div>
-<div class="mb-3"> {{ form_row (form.dueDate) }} </div>
+                <div class="mb-3"> {{ form_row (form.title, {label : false, attr: {class: "form-control", placeholder: "Title"}}) }} </div>
+                <div class="mb-3"> {{ form_row (form.description, {label : false, attr: {class: "form-control", placeholder: "Description"}}) }} </div>
+                <div class="mb-3"> {{ form_row (form.price, {label : false, attr: {class: "form-control", placeholder: "Price"}}) }} </div>
+                <div class="mb-3"> {{ form_row (form.dueDate, {id: 'date'}) }} </div>
         <input type="submit" style="margin-top: 16px;" class="btn btn-color px-5 mb-5 w-100" value="Create" />
     {{ form_end(form) }}
 
@@ -26,5 +26,10 @@
   </div>
 
     </div>
+    <script>
+        let date = document.getElementById('date');
+        date.setAttribute("min", new Date().toISOString().split("T")[0]);
+    </script>
 {% endblock %}
-
+{% block javascript %}
+{% endblock %}
